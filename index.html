@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>血糖値まとめ：あなたのエネルギーの土台</title>
+    <meta name="description" content="血糖値をやさしく解説するスライド（6枚）。Netlify/Vercelにそのままデプロイできます。">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { color-scheme: light only; }
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "YuGothic", Meiryo, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .slide-container { max-width: 1000px; width: 100%; background: #fff; border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,.2); overflow: hidden; position: relative; }
+        .slide { display: none; padding: 40px 40px 100px; text-align: center; min-height: 60svh; position: relative; }
+        .slide.active { display: block; }
+        .slide h1 { color: #2c3e50; font-size: clamp(28px,4vw,40px); margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .slide h2 { color: #34495e; font-size: clamp(22px,3vw,32px); margin-bottom: 24px; display:flex; align-items:center; justify-content:center; gap:10px; }
+        .icon { font-size: 1.2em; }
+        .blood-sugar-visual { display:flex; align-items:center; justify-content:center; gap:20px; margin: 20px 0 10px; flex-wrap:wrap; }
+        .glucose-molecule { width:80px; height:80px; background: linear-gradient(135deg,#ff6b6b,#feca57); border-radius:50%;
+            display:flex; align-items:center; justify-content:center; font-size:2em; color:#fff; box-shadow:0 4px 15px rgba(255,107,107,.3); animation:pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+        .arrow { font-size: 2em; color: #667eea; }
+        .energy-icons { display:flex; gap:20px; justify-content:center; margin: 20px 0; flex-wrap:wrap; }
+        .energy-item { display:flex; flex-direction:column; align-items:center; gap:10px; padding:16px;
+            background: linear-gradient(135deg, #667eea20, #764ba220); border-radius:15px; min-width:120px; }
+        .jet-coaster { width:100%; height:200px; background: linear-gradient(135deg,#667eea,#764ba2); border-radius:10px; position:relative; margin:20px 0; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.2); }
+        .track-path { position:absolute; bottom:20px; left:0; width:100%; height:4px; background:#2c3e50; border-radius:2px; }
+        .track-path::before { content:''; position:absolute; bottom:0; left:0; width:100%; height:100px;
+            background-image:
+              radial-gradient(ellipse at 10% bottom, transparent 20px, #2c3e50 21px, #2c3e50 23px, transparent 24px),
+              radial-gradient(ellipse at 25% bottom, transparent 40px, #2c3e50 41px, #2c3e50 43px, transparent 44px),
+              radial-gradient(ellipse at 45% bottom, transparent 60px, #2c3e50 61px, #2c3e50 63px, transparent 64px),
+              radial-gradient(ellipse at 65% bottom, transparent 35px, #2c3e50 36px, #2c3e50 38px, transparent 39px),
+              radial-gradient(ellipse at 85% bottom, transparent 15px, #2c3e50 16px, #2c3e50 18px, transparent 19px);
+        }
+        .coaster-car { position:absolute; font-size:2.5em; animation: ride-coaster 4s ease-in-out infinite; z-index:2; }
+        @keyframes ride-coaster {
+            0% { left:5%; bottom:30px; transform: rotate(-10deg); }
+            20% { left:20%; bottom:80px; transform: rotate(-30deg); }
+            40% { left:40%; bottom:120px; transform: rotate(0); }
+            60% { left:60%; bottom:70px; transform: rotate(20deg); }
+            80% { left:80%; bottom:25px; transform: rotate(30deg); }
+            100% { left:95%; bottom:30px; transform: rotate(0); }
+        }
+        .benefits-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:20px; margin: 20px 0; }
+        .benefit-item { background: linear-gradient(135deg,#667eea10,#764ba210); padding:20px; border-radius:15px; border-left:4px solid #667eea; }
+        .car-analogy { display:flex; align-items:center; justify-content:center; gap:20px; margin:20px 0; flex-wrap:wrap; }
+        .car { font-size:3em; animation: drive 4s linear infinite; }
+        @keyframes drive { 0%{transform:translateX(-20px);} 50%{transform:translateX(20px);} 100%{transform:translateX(-20px);} }
+        .fuel-gauge { width:100px; height:50px; border:3px solid #2c3e50; border-radius:10px; position:relative;
+            background: linear-gradient(to right,#27ae60 0%,#f39c12 50%,#e74c3c 100%); }
+        .fuel-needle { position:absolute; top:50%; left:75%; width:3px; height:30px; background:#2c3e50; transform: translateY(-50%); border-radius:2px; }
+        .navigation { position: sticky; bottom: 12px; display:flex; gap:10px; justify-content:center; margin-top: 12px; }
+        .nav-btn { padding:10px 20px; background:#667eea; color:#fff; border:none; border-radius:25px; cursor:pointer; transition:.2s; font-size:16px; }
+        .nav-btn:hover { background:#764ba2; transform: translateY(-2px); }
+        .nav-btn:disabled { background:#bdc3c7; cursor:not-allowed; transform:none; }
+        .slide-indicator { position:absolute; top:16px; right:16px; background: rgba(255,255,255,.9); padding:6px 12px; border-radius: 20px; font-weight:700; color:#2c3e50; }
+        .problem-list { text-align:left; max-width: 680px; margin: 0 auto; }
+        .problem-item { display:flex; align-items:center; gap:15px; margin:12px 0; padding:14px; background: linear-gradient(135deg,#ff6b6b20,#feca5720); border-radius:10px; }
+        .stars { color:#feca57; font-size: 1.4em; margin-bottom: 6px; }
+        .dream-connection { background: linear-gradient(135deg,#667eea20,#764ba220); padding:20px; border-radius:15px; margin: 10px 0 0; border: 2px solid #667eea; }
+        .highlight { background: linear-gradient(135deg,#feca57,#ff6b6b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-weight:700; }
+        @media (prefers-reduced-motion: reduce) {
+          .glucose-molecule, .car, .coaster-car { animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container" role="region" aria-label="血糖値スライド">
+        <div class="slide-indicator" aria-live="polite"><span id="current-slide">1</span> / 6</div>
+
+        <!-- Slide 1 -->
+        <div class="slide active">
+            <h1>血糖値まとめ</h1>
+            <h2>🔋 あなたのエネルギーの土台</h2>
+            <div class="blood-sugar-visual" aria-hidden="true">
+                <div class="glucose-molecule">🍬</div><div class="arrow">➡️</div>
+                <div class="glucose-molecule">⚡</div><div class="arrow">➡️</div>
+                <div class="glucose-molecule">💪</div>
+            </div>
+            <p style="font-size:1.2em;color:#34495e;margin-top: 16px;">
+                血糖値をコントロールして<br>
+                <span class="highlight">夢実現のためのエネルギー</span>を手に入れよう
+            </p>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+            <h2>🧪 血糖値とは？</h2>
+            <div class="blood-sugar-visual" aria-hidden="true">
+                <div style="text-align:center;">
+                    <div style="font-size:4em; margin-bottom: 10px;">🩸</div>
+                    <h3 style="color:#2c3e50;">血液中のブドウ糖の濃度</h3>
+                </div>
+            </div>
+            <div class="energy-icons">
+                <div class="energy-item"><div style="font-size:3em;">🧠</div><p><strong>脳の燃料</strong></p></div>
+                <div class="energy-item"><div style="font-size:3em;">💪</div><p><strong>筋肉の燃料</strong></p></div>
+                <div class="energy-item"><div style="font-size:3em;">⚡</div><p><strong>全身のエネルギー源</strong></p></div>
+            </div>
+            <div style="background: linear-gradient(135deg,#27ae60,#2ecc71); padding:16px; border-radius:15px; color:#fff; font-size:1.2em; margin-top: 8px;">
+                安定していると「集中力・気力・やる気」が長続き！
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+            <h2>📈📉 血糖値が乱れるとどうなる？</h2>
+            <div style="font-size:1.2em;margin:8px 0 10px;color:#e74c3c;">
+                急上昇 ➡️ 急下降 = 「エネルギーのジェットコースター」
+            </div>
+            <div class="jet-coaster" aria-hidden="true">
+<img src="血糖値.png" alt="サンプル画像" width="410">
+            </div>
+            <div class="problem-list">
+                <div class="problem-item"><div style="font-size:2em;">😵‍💫</div><p><strong>集中力が切れる</strong></p></div>
+                <div class="problem-item"><div style="font-size:2em;">😠</div><p><strong>イライラ・不安が出やすい</strong></p></div>
+                <div class="problem-item"><div style="font-size:2em;">🍰☕</div><p><strong>甘いもの・カフェインに頼りがち</strong></p></div>
+                <div class="problem-item"><div style="font-size:2em;">😴</div><p><strong>太りやすく、疲れやすくなる</strong></p></div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+            <h2>✨ 血糖値を安定させるメリット</h2>
+            <div class="stars">⭐⭐⭐ 強いエビデンス</div>
+            <div class="benefits-grid">
+                <div class="benefit-item"><div style="font-size:2em; margin-bottom:6px;">🧠</div><p><strong>頭がクリアになり<br>意思決定が早くなる</strong></p></div>
+                <div class="benefit-item"><div style="font-size:2em; margin-bottom:6px;">⚡</div><p><strong>午後もエネルギー切れせず<br>仕事がはかどる</strong></p></div>
+                <div class="benefit-item"><div style="font-size:2em; margin-bottom:6px;">😊</div><p><strong>イライラや不安が減り<br>人間関係も良くなる</strong></p></div>
+                <div class="benefit-item"><div style="font-size:2em; margin-bottom:6px;">😴</div><p><strong>睡眠の質が改善し<br>翌日のパフォーマンスUP</strong></p></div>
+                <div class="benefit-item"><div style="font-size:2em; margin-bottom:6px;">⚖️</div><p><strong>ホルモンバランス<br>も整いやすい</strong></p></div>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+            <h2>🌟 夢実現とのつながり</h2>
+            <div class="dream-connection">
+                <h3 style="color:#2c3e50; margin-bottom: 10px;">血糖値が安定 = 脳が「最高の経営資源」としてフル稼働</h3>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:14px; text-align:left;">
+                    <div><p><strong>🎯 集中力・継続力・クリエイティビティ</strong><br>が底上げされる</p></div>
+                    <div><p><strong>🧘‍♂️ 感情の波に流されず</strong><br>安定した判断ができる</p></div>
+                    <div><p><strong>📈 ビジネスの成長</strong><br>が加速する</p></div>
+                    <div><p><strong>🚀 長期的に夢を叶える力</strong><br>が持続する</p></div>
+                </div>
+            </div>
+            <div style="font-size:1.2em;margin-top: 12px; color:#2c3e50;">
+                起業家に必須のスキルが<span class="highlight">自然に</span>身につく！
+            </div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide">
+            <h2>🚗 イメージ例</h2>
+            <div style="font-size:1.1em; margin: 16px 0; color:#2c3e50;">血糖値を安定させることは…</div>
+            <div class="car-analogy"><div class="car">🚗</div><div style="font-size:2em;">💨</div>
+                <div class="fuel-gauge"><div class="fuel-needle"></div></div>
+            </div>
+            <div style="font-size:1.2em; color:#34495e; margin: 10px 0; line-height:1.6;">
+                ビジネスを走らせる<br><strong style="color:#667eea;">「エンジンに最適な燃料を入れる」</strong>こと
+            </div>
+            <div style="background: linear-gradient(135deg,#feca57,#ff6b6b); padding:16px; border-radius:15px; color:#fff; margin: 12px 0;">
+                <p style="font-size:1.05em;">ガソリンが不足すると車は止まるけど、安定していれば<strong>遠くまで走れる</strong></p>
+            </div>
+            <div style="font-size:1.3em; margin-top: 8px;">✨ つまり <span class="highlight">「血糖値コントロール = 夢を叶えるための隠れた武器」</span> なんです</div>
+        </div>
+
+        <div class="navigation" role="navigation" aria-label="スライド操作">
+            <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)" aria-label="前のスライド">◀ 前へ</button>
+            <button class="nav-btn" id="next-btn" onclick="changeSlide(1)" aria-label="次のスライド">次へ ▶</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const indicator = document.getElementById('current-slide');
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            indicator.textContent = String(currentSlide + 1);
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+        function changeSlide(direction) {
+            if ((direction === -1 && currentSlide > 0) || (direction === 1 && currentSlide < totalSlides - 1)) {
+                showSlide(currentSlide + direction);
+            }
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+        showSlide(0);
+    </script>
+</body>
+</html>
